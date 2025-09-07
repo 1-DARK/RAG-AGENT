@@ -1,7 +1,18 @@
 import "./App.css";
-
+import Navbar from "./components/Navbar";
+import SettingsPage from "./pages/SettingsPage";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { useThemeStore } from "./store/useThemeStore.js";
 function App() {
-  return <div className="bg-amber-200">Hello How</div>;
+  const { theme } = useThemeStore();
+  return (
+    <div data-theme={theme}>
+      <Navbar />
+      <Routes>
+        <Route path="/settings" element={<SettingsPage />} />
+      </Routes>
+    </div>
+  );
 }
 
 export default App;
