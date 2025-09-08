@@ -1,12 +1,9 @@
 import { useNavigate } from "react-router-dom";
-interface LimitModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
 
-export default function LimitModal({ isOpen, onClose }: LimitModalProps) {
+export default function LimitModal({ isOpen, onClose }) {
   if (!isOpen) return null;
   const navigate = useNavigate();
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop*/}

@@ -1,35 +1,18 @@
+import { useEffect, useState, useRef } from "react";
 import ChatSidebar from "./ChatSidebar";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
-
-import { useEffect, useState, useRef } from "react";
-import LimitModal from "./LimitModal";
-
-interface Message {
-  id: string;
-  content: string;
-  sender: "user" | "assistant";
-  timestamp: string;
-}
-
-interface Chat {
-  id: string;
-  title: string;
-  lastMessage: string;
-  timestamp: string;
-  messages: Message[];
-}
 
 const CHATS_STORAGE_KEY = "chatInterface_chats";
 const SELECTED_CHAT_KEY = "chatInterface_selectedChatId";
 
 export default function ChatInterface() {
-  const [chats, setChats] = useState<Chat[]>([]);
-  const [selectedChatId, setSelectedChatId] = useState<string>();
+  const [chats, setChats] = useState([]);
+  const [selectedChatId, setSelectedChatId] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [showLimitModal, setShowLimitModal] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const messagesEndRef = useRef(null);
 
   const selectedChat = chats.find((chat) => chat.id === selectedChatId);
 
@@ -45,7 +28,7 @@ export default function ChatInterface() {
     }
   }, [chats]);
 
-  const renameChat = (chatId: string, newTitle: string) => {
+  const renameChat = (chatId, newTitle) => {
     setChats((prevChats) =>
       prevChats.map((chat) =>
         chat.id === chatId ? { ...chat, title: newTitle } : chat
@@ -72,7 +55,7 @@ export default function ChatInterface() {
 
         if (
           savedSelectedChatId &&
-          parsedChats.some((chat: Chat) => chat.id === savedSelectedChatId)
+          parsedChats.some((chat) => chat.id === savedSelectedChatId)
         ) {
           setSelectedChatId(savedSelectedChatId);
         } else if (parsedChats.length > 0) {
@@ -97,7 +80,7 @@ export default function ChatInterface() {
 
   const createNewChat = () => {
     const newChatId = Date.now().toString();
-    const newChat: Chat = {
+    const newChat = {
       id: newChatId,
       title: "New Chat",
       lastMessage: "Start a new conversation",
@@ -122,7 +105,7 @@ export default function ChatInterface() {
     setTimeout(() => createNewChat(), 100);
   };
 
-  const deleteChat = (chatId: string) => {
+  const deleteChat = (chatId) => {
     const updatedChats = chats.filter((chat) => chat.id !== chatId);
     setChats(updatedChats);
 
@@ -143,7 +126,7 @@ export default function ChatInterface() {
     }
   };
 
-  const sendToWebhook = async (message: string, response: string) => {
+  const sendToWebhook = async (message, response) => {
     try {
       await fetch("http://localhost:5678/webhook/webi", {
         method: "POST",
@@ -162,7 +145,7 @@ export default function ChatInterface() {
     }
   };
 
-  const getAssistantResponse = async (message: string): Promise<string> => {
+  const getAssistantResponse = async (message) => {
     try {
       const response = await fetch("http://localhost:5678/webhook/webi", {
         method: "POST",
@@ -199,19 +182,13 @@ export default function ChatInterface() {
     }
   };
 
-  const handleSendMessage = async (content: string) => {
-    // Check if user has reached the limit before sending
-    if (totalUserMessages >= 45) {
-      setShowLimitModal(true);
-      return;
-    }
-
+  const handleSendMessage = async (content) => {
     if (!selectedChatId) {
       createNewChat();
       return;
     }
 
-    const userMessage: Message = {
+    const userMessage = {
       id: Date.now().toString(),
       content,
       sender: "user",
@@ -244,7 +221,7 @@ export default function ChatInterface() {
     try {
       const assistantResponse = await getAssistantResponse(content);
 
-      const assistantMessage: Message = {
+      const assistantMessage = {
         id: (Date.now() + 1).toString(),
         content: assistantResponse,
         sender: "assistant",
@@ -318,12 +295,6 @@ export default function ChatInterface() {
                   Start a conversation and I'll send your messages to the
                   webhook endpoint.
                 </p>
-                {totalUserMessages >= 3 && (
-                  <p className="text-sm text-destructive">
-                    You've reached your message limit. Please log in to
-                    continue.
-                  </p>
-                )}
               </div>
             </div>
           )}
@@ -333,12 +304,6 @@ export default function ChatInterface() {
         {/* Chat Input */}
         <ChatInput onSendMessage={handleSendMessage} />
       </div>
-
-      {/* Limit Modal */}
-      <LimitModal
-        isOpen={showLimitModal}
-        onClose={() => setShowLimitModal(false)}
-      />
     </div>
   );
 }

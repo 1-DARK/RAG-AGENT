@@ -1,17 +1,11 @@
 import { useState } from "react";
 import { Send, Loader2 } from "lucide-react";
 
-interface ChatInputProps {
-  onSendMessage: (message: string) => void;
-  disabled?: boolean;
-  placeholder?: string;
-}
-
 export default function ChatInput({
   onSendMessage,
   disabled = false,
   placeholder = "Type your message...",
-}: ChatInputProps) {
+}) {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,14 +15,13 @@ export default function ChatInput({
       onSendMessage(message.trim());
       setMessage("");
 
-      // Simulate a brief delay for better UX
       setTimeout(() => {
         setIsLoading(false);
       }, 500);
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
