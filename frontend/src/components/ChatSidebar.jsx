@@ -84,7 +84,7 @@ export default function ChatSidebar({
 
         <button
           onClick={onNewChat}
-          className={`mt-4 bg-green-700 hover:bg-green-600 text-white rounded-md transition-colors ${
+          className={`mt-4 bg-gray-600 text-white rounded-md transition-colors ${
             isCollapsed
               ? "p-2 flex justify-center"
               : "py-2 px-3 flex items-center justify-center w-full"

@@ -12,12 +12,9 @@ export default function ChatInput({
   const handleSend = async () => {
     if (message.trim() && !disabled && !isLoading) {
       setIsLoading(true);
-      onSendMessage(message.trim());
+      await onSendMessage(message.trim());
       setMessage("");
-
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 500);
+      setIsLoading(false);
     }
   };
 
@@ -29,8 +26,8 @@ export default function ChatInput({
   };
 
   return (
-    <div className="p-6 border-t border-gray-600 border-border bg-chat-background/50 backdrop-blur-sm">
-      <div className="flex gap-4 items-end max-w-4xl mx-auto">
+    <div className="p-4 border-t border-gray-600 ">
+      <div className="flex gap-2 items-end max-w-4xl mx-auto">
         <div className="flex-1">
           <textarea
             value={message}
@@ -38,9 +35,7 @@ export default function ChatInput({
             onKeyPress={handleKeyPress}
             placeholder={placeholder}
             disabled={disabled || isLoading}
-            className={`min-h-[60px] max-h-[120px] resize-none bg-chat-input border-border focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 ${
-              disabled ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className="w-full  h-15 p-4 resize-none border border-gray-300 rounded-lg focus:ring-2  transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             rows={2}
           />
         </div>
@@ -48,7 +43,8 @@ export default function ChatInput({
         <button
           onClick={handleSend}
           disabled={!message.trim() || disabled || isLoading}
-          className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed h-[60px] px-6"
+          className="flex-shrink-0 h-[60px] w-[60px] flex items-center justify-center bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label={isLoading ? "Sending message" : "Send message"}
         >
           {isLoading ? (
             <Loader2 className="h-5 w-5 animate-spin" />
@@ -59,7 +55,7 @@ export default function ChatInput({
       </div>
 
       {disabled && (
-        <p className="text-sm text-destructive mt-2 text-center">
+        <p className="text-sm text-red-600 mt-2 text-center">
           Message sending is disabled due to limit reached.
         </p>
       )}

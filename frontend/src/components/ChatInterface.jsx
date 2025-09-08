@@ -129,7 +129,7 @@ export default function ChatInterface() {
 
   const sendToWebhook = async (message, response) => {
     try {
-      await fetch("http://localhost:5678/webhook/webi", {
+      await fetch("http://localhost:5678/webhook-test/webi", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -148,7 +148,7 @@ export default function ChatInterface() {
 
   const getAssistantResponse = async (message) => {
     try {
-      const response = await fetch("http://localhost:5678/webhook/webi", {
+      const response = await fetch("http://localhost:5678/webhook-test/webi", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
