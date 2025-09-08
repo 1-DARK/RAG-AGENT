@@ -29,7 +29,7 @@ export default function ChatInput({
   };
 
   return (
-    <div className="p-6 border-t border-border bg-chat-background/50 backdrop-blur-sm">
+    <div className="p-6 border-t border-gray-600 border-border bg-chat-background/50 backdrop-blur-sm">
       <div className="flex gap-4 items-end max-w-4xl mx-auto">
         <div className="flex-1">
           <textarea
