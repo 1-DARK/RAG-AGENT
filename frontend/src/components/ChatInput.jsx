@@ -43,7 +43,7 @@ export default function ChatInput({
         <button
           onClick={handleSend}
           disabled={!message.trim() || disabled || isLoading}
-          className="flex-shrink-0 h-[60px] w-[60px] flex items-center justify-center bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-shrink-0 h-[60px] w-[60px] flex items-center justify-center bg-black text-white rounded-lg  transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label={isLoading ? "Sending message" : "Send message"}
         >
           {isLoading ? (
