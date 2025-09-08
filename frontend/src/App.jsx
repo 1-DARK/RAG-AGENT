@@ -1,10 +1,10 @@
 import "./App.css";
-import Navbar from "./components/Navbar";
+
 import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
-import SettingsPage from "./pages/SettingsPage";
+
 import NotFound from "./pages/NotFound.jsx";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useThemeStore } from "./store/useThemeStore.js";
@@ -44,7 +44,7 @@ function App() {
           path="/login"
           element={!authUser ? <LoginPage /> : <Navigate to={"/"} />}
         />
-        <Route path="/settings" element={<SettingsPage />} />
+
         <Route
           path="/profile"
           element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />}

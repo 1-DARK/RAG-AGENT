@@ -1,7 +1,7 @@
 import ChatSidebar from "./ChatSidebar";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
-
+import { useAuthStore } from "../store/useAuthStore";
 import { useEffect, useState, useRef } from "react";
 
 const CHATS_STORAGE_KEY = "chatInterface_chats";
@@ -13,6 +13,7 @@ export default function ChatInterface() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [showLimitModal, setShowLimitModal] = useState(false);
+  const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const messagesEndRef = useRef(null);
 
   const selectedChat = chats.find((chat) => chat.id === selectedChatId);
@@ -129,7 +130,7 @@ export default function ChatInterface() {
 
   const sendToWebhook = async (message, response) => {
     try {
-      await fetch("http://localhost:5678/webhook-test/webi", {
+      await fetch("http://localhost:5678/webhook/webi", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -148,7 +149,7 @@ export default function ChatInterface() {
 
   const getAssistantResponse = async (message) => {
     try {
-      const response = await fetch("http://localhost:5678/webhook-test/webi", {
+      const response = await fetch("http://localhost:5678/webhook/webi", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -296,11 +297,10 @@ export default function ChatInterface() {
             <div className="h-full flex items-center justify-center ">
               <div className="text-center max-w-2xl mx-auto p-8">
                 <h1 className="text-4xl font-bold text-gray-200 mb-4">
-                  What's on your mind today?
+                  Hi, {authUser?.fullName}
                 </h1>
-                <p className="text-lg text-gray-400 mb-8">
-                  Start a conversation and I'll send your messages to the
-                  webhook endpoint.
+                <p className="text-4xl text-gray-400 mb-8">
+                  What can I help you with ?
                 </p>
                 {totalUserMessages >= 3 && (
                   <p className="text-sm text-red-400">

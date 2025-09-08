@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import {
   MessageSquare,
   Plus,
-  Settings,
   Menu,
   Zap,
   TrendingUp,
@@ -245,16 +244,6 @@ export default function ChatSidebar({
       )}
 
       {/* Footer */}
-      <div className="p-3 border-t border-gray-800">
-        <button
-          onClick={() => navigate("/settings")}
-          className={`flex items-center w-full p-2 rounded-md transition-colors $
-           ${isCollapsed ? "justify-center" : ""}`}
-        >
-          <Settings className="h-4 w-4" />
-          {!isCollapsed && <span className="ml-3">Settings</span>}
-        </button>
-      </div>
     </div>
   );
 }

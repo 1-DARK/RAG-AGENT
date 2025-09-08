@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Camera, User, Mail } from "lucide-react";
+import { Camera, User, Mail, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
@@ -18,9 +19,18 @@ const ProfilePage = () => {
       await updateProfile({ profilePic: base64Image });
     };
   };
+  const navigate = useNavigate();
   return (
     <div className="h-screen pt-20">
-      <div className="max-w-2xl mx-auto p-4 py-8">
+      <div className="max-w-2xl mx-auto p-4 ">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 mb-4 text-zinc-400 hover:text-white transition-colors duration-200"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          Back to Chat
+        </button>
         <div className="bg-base-300 rounded-xl p-6 space-y-8">
           <div className="text-center">
             <h1 className="text-2xl font-semibold ">Profile</h1>
