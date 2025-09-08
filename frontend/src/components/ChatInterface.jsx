@@ -260,7 +260,7 @@ export default function ChatInterface() {
   };
 
   return (
-    <div className="h-screen bg-background flex overflow-hidden">
+    <div className="h-screen bg-gray-950 flex overflow-hidden">
       <ChatSidebar
         chats={chats}
         selectedChatId={selectedChatId}
@@ -275,7 +275,7 @@ export default function ChatInterface() {
 
       <div className="flex-1 flex flex-col">
         {/* Main Chat Area */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto bg-black">
           {selectedChat && selectedChat.messages.length > 0 ? (
             <div className="max-w-4xl mx-auto">
               {selectedChat.messages.map((message) => (
@@ -283,27 +283,27 @@ export default function ChatInterface() {
               ))}
               {isLoading && (
                 <div className="flex gap-4 p-6">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                  <div className="flex-shrink-0 w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center">
+                    <div className="w-4 h-4 border-2 border-gray-600 border-t-gray-300 rounded-full animate-spin" />
                   </div>
-                  <div className="bg-transparent text-foreground">
-                    <p className="text-sm text-muted-foreground">Thinking...</p>
+                  <div className="bg-transparent text-gray-200">
+                    <p className="text-sm text-gray-400">Thinking...</p>
                   </div>
                 </div>
               )}
             </div>
           ) : (
-            <div className="h-full flex items-center justify-center">
+            <div className="h-full flex items-center justify-center bg-black">
               <div className="text-center max-w-2xl mx-auto p-8">
-                <h1 className="text-4xl font-bold text-foreground mb-4">
+                <h1 className="text-4xl font-bold text-gray-200 mb-4">
                   What's on your mind today?
                 </h1>
-                <p className="text-lg text-muted-foreground mb-8">
+                <p className="text-lg text-gray-400 mb-8">
                   Start a conversation and I'll send your messages to the
                   webhook endpoint.
                 </p>
                 {totalUserMessages >= 3 && (
-                  <p className="text-sm text-destructive">
+                  <p className="text-sm text-red-400">
                     You've reached your message limit. Please log in to
                     continue.
                   </p>
@@ -315,7 +315,9 @@ export default function ChatInterface() {
         </div>
 
         {/* Chat Input */}
-        <ChatInput onSendMessage={handleSendMessage} />
+        <div className="bg-gray-900 p-4">
+          <ChatInput onSendMessage={handleSendMessage} />
+        </div>
       </div>
 
       {/* Limit Modal */}

@@ -68,17 +68,15 @@ export default function ChatSidebar({
     <div
       className={`${
         isCollapsed ? "w-16" : "w-64"
-      } h-full bg-gray-900 border-r border-gray-700 flex flex-col transition-all duration-300`}
+      } h-full bg- border-r border-gray-800 flex flex-col transition-all duration-300`}
     >
       {/* Header */}
-      <div className="p-4 border-b border-gray-700">
+      <div className="p-4 border-b border-gray-800">
         <div className="flex items-center justify-between">
-          {!isCollapsed && (
-            <h1 className="text-lg font-semibold text-white">AI Chat</h1>
-          )}
+          {!isCollapsed && <h1 className="text-lg font-semibold ">AI Chat</h1>}
           <button
             onClick={onToggleCollapse}
-            className="p-1 rounded hover:bg-gray-800 text-gray-400 hover:text-white"
+            className="p-1 rounded hover:text-green-300"
           >
             <Menu className="h-5 w-5" />
           </button>
@@ -86,7 +84,7 @@ export default function ChatSidebar({
 
         <button
           onClick={onNewChat}
-          className={`mt-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors ${
+          className={`mt-4 bg-green-700 hover:bg-green-600 text-white rounded-md transition-colors ${
             isCollapsed
               ? "p-2 flex justify-center"
               : "py-2 px-3 flex items-center justify-center w-full"
@@ -98,7 +96,7 @@ export default function ChatSidebar({
       </div>
 
       {/* Navigation Menu */}
-      <div className="p-2 border-b border-gray-700">
+      <div className="p-2 border-b border-gray-800">
         <div className="space-y-1">
           {[
             { path: "/integrations", icon: Zap, label: "Integrations" },
@@ -108,11 +106,9 @@ export default function ChatSidebar({
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className={`flex items-center w-full p-2 rounded-md transition-colors ${
-                location.pathname === item.path
-                  ? "bg-gray-800 text-white"
-                  : "text-gray-400 hover:bg-gray-800 hover:text-white"
-              } ${isCollapsed ? "justify-center" : ""}`}
+              className={`flex items-center w-full p-2 rounded-md  hover:bg-gray-700 transition-colors $
+            
+             ${isCollapsed ? "justify-center " : ""}`}
             >
               <item.icon className="h-4 w-4" />
               {!isCollapsed && <span className="ml-3">{item.label}</span>}
@@ -122,15 +118,15 @@ export default function ChatSidebar({
       </div>
 
       {/* Chat List */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto ">
         {!isCollapsed && chats.length > 0 && (
-          <div className="p-3 border-b border-gray-700 flex justify-between items-center">
-            <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+          <div className="p-3 border-b border-gray-800 flex justify-between items-center  hover:text-red-400">
+            <span className="text-xs font-medium uppercase tracking-wider">
               Recent Chats
             </span>
             <button
               onClick={onClearAllHistory}
-              className="text-xs text-gray-400 hover:text-red-400 transition-colors flex items-center"
+              className="text-xstransition-colors flex items-center"
             >
               <Trash2 className="h-3 w-3 mr-1" />
               Clear All
@@ -143,7 +139,7 @@ export default function ChatSidebar({
             <div
               key={chat.id}
               className={`relative rounded-md transition-colors mb-1 group ${
-                selectedChatId === chat.id ? "bg-gray-800" : "hover:bg-gray-800"
+                selectedChatId === chat.id ? "bg-gray-900" : "bg-black"
               }`}
             >
               {editingChatId === chat.id ? (
@@ -152,7 +148,7 @@ export default function ChatSidebar({
                     type="text"
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
-                    className="w-full p-2 text-sm border border-gray-600 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2 text-sm border rounded-md b focus:outline-none focus:ring-2 "
                     autoFocus
                     onKeyDown={(e) => {
                       if (e.key === "Enter") handleRenameSave();
@@ -162,13 +158,13 @@ export default function ChatSidebar({
                   <div className="flex justify-end space-x-2 mt-2">
                     <button
                       onClick={handleRenameCancel}
-                      className="px-2 py-1 text-xs text-gray-400 hover:text-white"
+                      className="px-2 py-1 text-xs"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleRenameSave}
-                      className="px-2 py-1 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded"
+                      className="px-2 py-1 text-xs text-white rounded"
                     >
                       Save
                     </button>
@@ -183,13 +179,13 @@ export default function ChatSidebar({
                       : "flex items-start gap-2"
                   }`}
                 >
-                  <MessageSquare className="h-4 w-4 mt-0.5 flex-shrink-0 text-blue-400" />
+                  <MessageSquare className="h-4 w-4 mt-0.5 flex-shrink-0 " />
                   {!isCollapsed && (
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-white truncate">
+                      <p className="text-sm font-medium  truncate">
                         {chat.title}
                       </p>
-                      <p className="text-xs text-gray-400 truncate mt-1">
+                      <p className="text-xs truncate mt-1">
                         {chat.lastMessage}
                       </p>
                     </div>
@@ -203,16 +199,16 @@ export default function ChatSidebar({
                       e.stopPropagation();
                       handleRenameStart(chat);
                     }}
-                    className="p-1 rounded hover:bg-gray-700 text-gray-400 hover:text-white"
+                    className="p-1 rounded  hover:text-green-400"
                   >
-                    <Edit3 className="h-3 w-3" />
+                    <Edit3 className="h-3 w-3 " />
                   </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onDeleteChat(chat.id);
                     }}
-                    className="p-1 rounded hover:bg-gray-700 text-gray-400 hover:text-red-400"
+                    className="p-1 rounded hover:text-red-400"
                   >
                     <Trash2 className="h-3 w-3" />
                   </button>
@@ -225,10 +221,10 @@ export default function ChatSidebar({
 
       {/* User Section */}
       {authUser && (
-        <div className="p-3 border-t border-gray-700 space-y-2">
+        <div className="p-3 border-t border-gray-800  space-y-2">
           <Link
             to={"/profile"}
-            className={`flex items-center w-full p-2 rounded-md transition-colors text-gray-400 hover:bg-gray-800 hover:text-white ${
+            className={`flex items-center w-full p-2 rounded-md transition-colors  ${
               isCollapsed ? "justify-center" : ""
             }`}
           >
@@ -238,7 +234,7 @@ export default function ChatSidebar({
 
           <button
             onClick={logout}
-            className={`flex items-center w-full p-2 rounded-md transition-colors text-gray-400 hover:bg-gray-800 hover:text-white ${
+            className={`flex items-center w-full p-2 rounded-md transition-colors ${
               isCollapsed ? "justify-center" : ""
             }`}
           >
@@ -249,14 +245,11 @@ export default function ChatSidebar({
       )}
 
       {/* Footer */}
-      <div className="p-3 border-t border-gray-700">
+      <div className="p-3 border-t border-gray-800">
         <button
           onClick={() => navigate("/settings")}
-          className={`flex items-center w-full p-2 rounded-md transition-colors ${
-            location.pathname === "/settings"
-              ? "bg-gray-800 text-white"
-              : "text-gray-400 hover:bg-gray-800 hover:text-white"
-          } ${isCollapsed ? "justify-center" : ""}`}
+          className={`flex items-center w-full p-2 rounded-md transition-colors $
+           ${isCollapsed ? "justify-center" : ""}`}
         >
           <Settings className="h-4 w-4" />
           {!isCollapsed && <span className="ml-3">Settings</span>}
