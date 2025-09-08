@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import SettingsPage from "./pages/SettingsPage";
+import NotFound from "./pages/NotFound.jsx";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useThemeStore } from "./store/useThemeStore.js";
 import { useAuthStore } from "./store/useAuthStore.js";
@@ -49,7 +50,9 @@ function App() {
           path="/profile"
           element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />}
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
+
       <Toaster />
     </div>
   );
