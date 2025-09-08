@@ -1,7 +1,8 @@
-import { useEffect, useState, useRef } from "react";
 import ChatSidebar from "./ChatSidebar";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
+
+import { useEffect, useState, useRef } from "react";
 
 const CHATS_STORAGE_KEY = "chatInterface_chats";
 const SELECTED_CHAT_KEY = "chatInterface_selectedChatId";
@@ -11,7 +12,7 @@ export default function ChatInterface() {
   const [selectedChatId, setSelectedChatId] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
+  const [showLimitModal, setShowLimitModal] = useState(false);
   const messagesEndRef = useRef(null);
 
   const selectedChat = chats.find((chat) => chat.id === selectedChatId);
@@ -183,6 +184,12 @@ export default function ChatInterface() {
   };
 
   const handleSendMessage = async (content) => {
+    // Check if user has reached the limit before sending
+    if (totalUserMessages >= 45) {
+      setShowLimitModal(true);
+      return;
+    }
+
     if (!selectedChatId) {
       createNewChat();
       return;
@@ -295,6 +302,12 @@ export default function ChatInterface() {
                   Start a conversation and I'll send your messages to the
                   webhook endpoint.
                 </p>
+                {totalUserMessages >= 3 && (
+                  <p className="text-sm text-destructive">
+                    You've reached your message limit. Please log in to
+                    continue.
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -304,6 +317,8 @@ export default function ChatInterface() {
         {/* Chat Input */}
         <ChatInput onSendMessage={handleSendMessage} />
       </div>
+
+      {/* Limit Modal */}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   MessageSquare,
   Plus,
@@ -7,7 +7,6 @@ import {
   Zap,
   TrendingUp,
   BookOpen,
-  History,
   Trash2,
   Edit3,
 } from "lucide-react";
@@ -31,6 +30,21 @@ export default function ChatSidebar({
   const location = useLocation();
   const [editingChatId, setEditingChatId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const { logout, authUser } = useAuthStore();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+      // Auto-collapse sidebar on mobile
+      if (window.innerWidth < 1024 && !isCollapsed) {
+        onToggleCollapse();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [isCollapsed, onToggleCollapse]);
 
   const handleRenameStart = (chat) => {
     setEditingChatId(chat.id);
@@ -49,7 +63,7 @@ export default function ChatSidebar({
     setEditingChatId(null);
     setEditTitle("");
   };
-  const { logout, authUser } = useAuthStore();
+
   return (
     <div
       className={`${
@@ -72,7 +86,7 @@ export default function ChatSidebar({
 
         <button
           onClick={onNewChat}
-          className={`mt-12  bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors ${
+          className={`mt-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors ${
             isCollapsed
               ? "p-2 flex justify-center"
               : "py-2 px-3 flex items-center justify-center w-full"
@@ -208,18 +222,30 @@ export default function ChatSidebar({
           ))}
         </div>
       </div>
+
+      {/* User Section */}
       {authUser && (
-        <>
-          <Link to={"/profile"} className={`btn btn-sm gap-2`}>
-            <User className="size-5" />
-            <span className="hidden sm:inline">Profile</span>
+        <div className="p-3 border-t border-gray-700 space-y-2">
+          <Link
+            to={"/profile"}
+            className={`flex items-center w-full p-2 rounded-md transition-colors text-gray-400 hover:bg-gray-800 hover:text-white ${
+              isCollapsed ? "justify-center" : ""
+            }`}
+          >
+            <User className="h-4 w-4" />
+            {!isCollapsed && <span className="ml-3">Profile</span>}
           </Link>
 
-          <button className="flex gap-2 items-center" onClick={logout}>
-            <LogOut className="size-5" />
-            <span className="hidden sm:inline">Logout</span>
+          <button
+            onClick={logout}
+            className={`flex items-center w-full p-2 rounded-md transition-colors text-gray-400 hover:bg-gray-800 hover:text-white ${
+              isCollapsed ? "justify-center" : ""
+            }`}
+          >
+            <LogOut className="h-4 w-4" />
+            {!isCollapsed && <span className="ml-3">Logout</span>}
           </button>
-        </>
+        </div>
       )}
 
       {/* Footer */}
