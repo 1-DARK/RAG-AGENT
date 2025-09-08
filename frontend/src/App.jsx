@@ -31,7 +31,6 @@ function App() {
   console.log(authUser);
   return (
     <div data-theme={theme}>
-      <Navbar />
       <Routes>
         <Route
           path="/"

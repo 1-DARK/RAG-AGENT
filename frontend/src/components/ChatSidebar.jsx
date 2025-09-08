@@ -12,6 +12,9 @@ import {
   Edit3,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useAuthStore } from "../store/useAuthStore";
+import { LogOut, User } from "lucide-react";
 
 export default function ChatSidebar({
   chats,
@@ -46,7 +49,7 @@ export default function ChatSidebar({
     setEditingChatId(null);
     setEditTitle("");
   };
-
+  const { logout, authUser } = useAuthStore();
   return (
     <div
       className={`${
@@ -205,6 +208,19 @@ export default function ChatSidebar({
           ))}
         </div>
       </div>
+      {authUser && (
+        <>
+          <Link to={"/profile"} className={`btn btn-sm gap-2`}>
+            <User className="size-5" />
+            <span className="hidden sm:inline">Profile</span>
+          </Link>
+
+          <button className="flex gap-2 items-center" onClick={logout}>
+            <LogOut className="size-5" />
+            <span className="hidden sm:inline">Logout</span>
+          </button>
+        </>
+      )}
 
       {/* Footer */}
       <div className="p-3 border-t border-gray-700">
