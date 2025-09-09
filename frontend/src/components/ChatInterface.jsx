@@ -12,7 +12,6 @@ export default function ChatInterface() {
   const [selectedChatId, setSelectedChatId] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [showLimitModal, setShowLimitModal] = useState(false);
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const messagesEndRef = useRef(null);
 
@@ -185,12 +184,6 @@ export default function ChatInterface() {
   };
 
   const handleSendMessage = async (content) => {
-    // Check if user has reached the limit before sending
-    if (totalUserMessages >= 45) {
-      setShowLimitModal(true);
-      return;
-    }
-
     if (!selectedChatId) {
       createNewChat();
       return;
@@ -302,12 +295,6 @@ export default function ChatInterface() {
                 <p className="text-4xl text-gray-400 mb-8">
                   What can I help you with ?
                 </p>
-                {totalUserMessages >= 3 && (
-                  <p className="text-sm text-red-400">
-                    You've reached your message limit. Please log in to
-                    continue.
-                  </p>
-                )}
               </div>
             </div>
           )}
@@ -319,8 +306,6 @@ export default function ChatInterface() {
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
       </div>
-
-      {/* Limit Modal */}
     </div>
   );
 }
