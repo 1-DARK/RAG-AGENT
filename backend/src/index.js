@@ -1,6 +1,6 @@
 import express from "express";
 import authRoutes from "./routes/auth.route.js";
-import messageRoutes from "./routes/message.route.js";
+
 import cors from "cors";
 import { connectDB } from "./lib/db.js";
 import dotenv from "dotenv";
@@ -19,7 +19,7 @@ app.use(
   })
 );
 app.use("/api/auth", authRoutes);
-app.use("/api/messages", messageRoutes);
+
 server.listen(PORT, () => {
   console.log("Server started at http://localhost:" + PORT);
   connectDB();
