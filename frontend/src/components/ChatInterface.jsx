@@ -4,50 +4,48 @@ import ChatInput from "./ChatInput";
 import { useAuthStore } from "../store/useAuthStore";
 import { useEffect, useState, useRef } from "react";
 
-const CHATS_STORAGE_KEY = "chatInterface_chats";
-const SELECTED_CHAT_KEY = "chatInterface_selectedChatId";
+// Remove the constant key definitions from here
+// We'll generate user-specific keys dynamically
 
 export default function ChatInterface() {
   const [chats, setChats] = useState([]);
   const [selectedChatId, setSelectedChatId] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
+  const { authUser } = useAuthStore();
   const messagesEndRef = useRef(null);
+
+  // Generate user-specific storage keys
+  const getChatsKey = () => `chatInterface_chats_${authUser?.uid}`;
+  const getSelectedChatKey = () =>
+    `chatInterface_selectedChatId_${authUser?.uid}`;
 
   const selectedChat = chats.find((chat) => chat.id === selectedChatId);
 
-  // Count user messages across all chats
-  const totalUserMessages = chats.reduce((total, chat) => {
-    return total + chat.messages.filter((msg) => msg.sender === "user").length;
-  }, 0);
-
   // Save chats to localStorage whenever chats change
   useEffect(() => {
-    if (chats.length > 0) {
-      localStorage.setItem(CHATS_STORAGE_KEY, JSON.stringify(chats));
+    if (chats.length > 0 && authUser) {
+      localStorage.setItem(getChatsKey(), JSON.stringify(chats));
     }
-  }, [chats]);
-
-  const renameChat = (chatId, newTitle) => {
-    setChats((prevChats) =>
-      prevChats.map((chat) =>
-        chat.id === chatId ? { ...chat, title: newTitle } : chat
-      )
-    );
-  };
+  }, [chats, authUser]);
 
   // Save selected chat ID to localStorage whenever it changes
   useEffect(() => {
-    if (selectedChatId) {
-      localStorage.setItem(SELECTED_CHAT_KEY, selectedChatId);
+    if (selectedChatId && authUser) {
+      localStorage.setItem(getSelectedChatKey(), selectedChatId);
     }
-  }, [selectedChatId]);
+  }, [selectedChatId, authUser]);
 
-  // Load chats and selected chat from localStorage on component mount
+  // Load chats and selected chat when user changes
   useEffect(() => {
-    const savedChats = localStorage.getItem(CHATS_STORAGE_KEY);
-    const savedSelectedChatId = localStorage.getItem(SELECTED_CHAT_KEY);
+    if (!authUser) {
+      setChats([]);
+      setSelectedChatId(undefined);
+      return;
+    }
+
+    const savedChats = localStorage.getItem(getChatsKey());
+    const savedSelectedChatId = localStorage.getItem(getSelectedChatKey());
 
     if (savedChats) {
       try {
@@ -61,6 +59,8 @@ export default function ChatInterface() {
           setSelectedChatId(savedSelectedChatId);
         } else if (parsedChats.length > 0) {
           setSelectedChatId(parsedChats[0].id);
+        } else {
+          createNewChat();
         }
       } catch (error) {
         console.error("Error parsing saved chats:", error);
@@ -69,7 +69,7 @@ export default function ChatInterface() {
     } else {
       createNewChat();
     }
-  }, []);
+  }, [authUser]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -80,6 +80,8 @@ export default function ChatInterface() {
   }, [selectedChat?.messages]);
 
   const createNewChat = () => {
+    if (!authUser) return;
+
     const newChatId = Date.now().toString();
     const newChat = {
       id: newChatId,
@@ -96,25 +98,35 @@ export default function ChatInterface() {
     setSelectedChatId(newChatId);
   };
 
+  const renameChat = (chatId, newTitle) => {
+    setChats((prevChats) =>
+      prevChats.map((chat) =>
+        chat.id === chatId ? { ...chat, title: newTitle } : chat
+      )
+    );
+  };
+
   const clearAllHistory = () => {
+    if (authUser) {
+      localStorage.removeItem(getChatsKey());
+      localStorage.removeItem(getSelectedChatKey());
+    }
     setChats([]);
     setSelectedChatId(undefined);
-    localStorage.removeItem(CHATS_STORAGE_KEY);
-    localStorage.removeItem(SELECTED_CHAT_KEY);
-
-    // Create a new chat after clearing
-    setTimeout(() => createNewChat(), 100);
+    createNewChat();
   };
 
   const deleteChat = (chatId) => {
     const updatedChats = chats.filter((chat) => chat.id !== chatId);
     setChats(updatedChats);
 
-    if (updatedChats.length === 0) {
-      localStorage.removeItem(CHATS_STORAGE_KEY);
-      localStorage.removeItem(SELECTED_CHAT_KEY);
-    } else {
-      localStorage.setItem(CHATS_STORAGE_KEY, JSON.stringify(updatedChats));
+    if (authUser) {
+      if (updatedChats.length === 0) {
+        localStorage.removeItem(getChatsKey());
+        localStorage.removeItem(getSelectedChatKey());
+      } else {
+        localStorage.setItem(getChatsKey(), JSON.stringify(updatedChats));
+      }
     }
 
     if (selectedChatId === chatId) {
@@ -122,7 +134,7 @@ export default function ChatInterface() {
         setSelectedChatId(updatedChats[0].id);
       } else {
         setSelectedChatId(undefined);
-        setTimeout(() => createNewChat(), 100);
+        createNewChat();
       }
     }
   };
@@ -252,7 +264,6 @@ export default function ChatInterface() {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="h-screen bg-gray-950 flex overflow-hidden">
       <ChatSidebar
@@ -268,7 +279,6 @@ export default function ChatInterface() {
       />
 
       <div className="flex-1 flex flex-col">
-        {/* Main Chat Area */}
         <div className="flex-1 overflow-y-auto bg-gray-950/80">
           {selectedChat && selectedChat.messages.length > 0 ? (
             <div className="max-w-4xl mx-auto">
@@ -301,7 +311,6 @@ export default function ChatInterface() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Chat Input */}
         <div className="bg-gray-950 p-4">
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
